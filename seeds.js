@@ -8,9 +8,23 @@ main(console.log("mongo connection open")).catch((err) => console.log(err));
 async function main() {
     await mongoose.connect("mongodb://localhost:27017/forum");
 }
+Question.deleteMany({}, function ( err ) {
+    console .log( "success" );
+});
+Question.deleteMany({}, function ( err ) {
+    console .log( "success" );
+});
+User.deleteMany({}, function ( err ) {
+    console .log( "success" );
+});
 
-    const u = new User({username:'Dildo', password:'beggins 5, mordor'})
-    u.save()
+
+    const u = new User({
+        username:'Dildo',
+        email: 'dildo@gmail.com',
+      });
+  
+      const registeredUser =  User.register(u, password);
 
     const arr = [
         { title: "How to align divs", user: u }, 

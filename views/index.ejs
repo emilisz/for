@@ -1,4 +1,5 @@
 <%- include('partials/header'); -%>
+
 <h1>Questions</h1>
 
 
@@ -6,7 +7,7 @@
     <% questions.forEach(function(q) { %>
     <li class="list-group-item d-flex justify-content-between align-items-start">
       <div class="ms-2 me-auto">
-        <div class="fw-bold"><%= q.user.username %>:</div>
+        <div class="fw-bold"><%=q.user ? q.user.username : 'guest' %>:</div>
         <a href="/questions/<%= q.id %>"><%= q.title %></a>
       </div>
       <span class="badge <%= q.comments.length ? 'bg-primary' : 'bg-light'  %>  rounded-pill"><%= q.comments.length ? q.comments.length : 0  %> </span>

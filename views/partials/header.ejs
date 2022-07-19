@@ -96,14 +96,17 @@
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="/">Visi klausimai</a>
             </li>
+            <% if(!currentUser){ %> 
             <li class="nav-item">
               <a class="nav-link" aria-current="page" href="/login">Prisijungti</a>
             </li>
+            <% } else { %> 
             <li class="nav-item">
               <form action="/logout" method="post">
                 <button class="btn btn-outline-danger" type="submit" aria-current="page">Atsijungti</button>
               </form>
             </li>
+            <% } %> 
           </ul>
           <form class="d-flex" role="search">
             <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> -->
@@ -112,5 +115,11 @@
         </div>
       </div>
     </nav>
+    <% if (message) { %>
+      <div class="text-success mx-auto text-center" role="alert"><%= message %></div>
+      <% } %>
+    <% if (errmsg) { %>
+      <div class="text-danger mx-auto text-center" role="alert"><%= errmsg %></div>
+      <% } %>
   </body>
 </html>
