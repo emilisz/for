@@ -77,9 +77,77 @@ app.get("/api/home", async (req, res) => {
       path: "comments",
       populate: { path: "user" },
     });
-    console.log(question);
+    // console.log(question);
     res.send(question);
   });
+
+  app.post("/api/questions/:id/", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { title } = req.body;
+      const question = await Question.findById(id);
+      question.title = title;
+      await question.save();
+      res.sendStatus(200)
+    } catch (error) {
+      res.sendStatus(500)
+    }
+  });
+
+  app.get("/api/comments/:id", async (req, res) => {
+    const { id } = req.params;
+    const comment = await Comment.findById(id)
+    // console.log(comment);
+    res.send(comment);
+  });
+
+
+  app.post("/api/comments/:id", async (req, res) => {
+    console.log(req.params);
+    try {
+      const { id } = req.params;
+      const { title } = req.body;
+      const comment = await Comment.findById(id);
+      comment.title = title;
+      await comment.save();
+      res.sendStatus(200)
+    } catch (error) {
+      res.sendStatus(500)
+    }
+  });
+
+  app.delete("/api/comments/:id", async (req, res) => {
+    const { id } = req.params;
+    const comment =   await Comment.findOneAndDelete({id})
+    console.log(comment);
+    res.sendStatus(200)
+  });
+
+  app.delete('/api/questions/:id',  async (req,res) => {
+    const question =   await Question.findOneAndDelete(req.params.id)
+    await Comment.deleteMany({_id: {$in :question.comments}})
+    res.sendStatus(200)
+  })
+
+
+  app.post("/api/questions/:id/comments", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { title } = req.body;
+      const comment = new Comment({ title });
+      const question = await Question.findById(id);
+      question.comments.push(comment);
+      comment.question = question;
+      // comment.user = req.user;
+      await comment.save();
+      await question.save();
+      res.sendStatus(200)
+    } catch (error) {
+      res.sendStatus(500)
+    }
+  });
+
+
 // API end =====================================================
 
 app.get("/", async (req, res) => {

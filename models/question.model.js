@@ -12,10 +12,10 @@ const {Schema} = mongoose
     comments: [{type: Schema.Types.ObjectId, ref:'Comment'}]
  }, { timestamps: true })
 
- questionSchema.post('findOneAndDelete', async function(question){
-    if (question.comments.length) {
-     const items = await Comment.deleteMany({_id: {$in :question.comments}})
-    }
-   })
+//  questionSchema.post('findOneAndDelete', async function(question){
+//     if (question.comments.length) {
+//      await Comment.deleteMany({_id: {$in :question.comments}})
+//     }
+//    })
 
  module.exports = mongoose.model('Question', questionSchema)
