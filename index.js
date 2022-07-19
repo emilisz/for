@@ -5,7 +5,7 @@ const app = express();
 const path = require("path");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
-const bcrypt = require("bcryptjs");
+// const bcrypt = require("bcryptjs");
 const User = require("./models/user.model");
 const Comment = require("./models/comment.model");
 const Question = require("./models/question.model");
@@ -22,6 +22,8 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(methodOverride("_method"));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+// app.use(routes);
 app.use(
   session({
     secret: "forum",
@@ -52,6 +54,33 @@ const isLoggedIn = (req, res, next) => {
   }
   next();
 };
+
+// API =====================================================
+app.get("/api/home", async (req, res) => {
+    const questions = await Question.find({}).populate("comments").populate("user");
+    res.send(questions);
+  });
+  
+  app.post("/api/questions", async (req, res) => {
+    console.log(req);
+    const q = new Question(req.body);
+    // q.user = req.user;
+    await q.save();
+    res.sendStatus(200)
+  });
+  
+
+  
+  app.get("/api/questions/:id", async (req, res) => {
+    const { id } = req.params;
+    const question = await Question.findById(id).populate({
+      path: "comments",
+      populate: { path: "user" },
+    });
+    console.log(question);
+    res.send(question);
+  });
+// API end =====================================================
 
 app.get("/", async (req, res) => {
   const questions = await Question.find({}).populate("comments").populate("user");
